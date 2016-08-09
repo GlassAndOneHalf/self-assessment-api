@@ -172,9 +172,9 @@ case class MongoUKProperties(id: BSONObjectID,
                                sourceId: SourceId,
                                saUtr: SaUtr,
                                taxYear: TaxYear,
-                               lastModifiedDateTime: DateTime,
-                               createdDateTime: DateTime,
-                               rentARoomRelief: Option[BigDecimal],
+                               lastModifiedDateTime: DateTime = DateTime.now(DateTimeZone.UTC),
+                               createdDateTime: DateTime = DateTime.now(DateTimeZone.UTC),
+                               rentARoomRelief: Option[BigDecimal] = None,
                                allowances: Option[Allowances] = None,
                                adjustments: Option[Adjustments] = None,
                                incomes: Seq[MongoUKPropertiesIncomeSummary] = Nil,
@@ -203,14 +203,11 @@ object MongoUKProperties {
 
   def create(saUtr: SaUtr, taxYear: TaxYear, ukp: UKProperty): MongoUKProperties = {
     val id = BSONObjectID.generate
-    val now = DateTime.now(DateTimeZone.UTC)
     MongoUKProperties(
       id = id,
       sourceId = id.stringify,
       saUtr = saUtr,
       taxYear = taxYear,
-      lastModifiedDateTime = now,
-      createdDateTime = now,
       rentARoomRelief = ukp.rentARoomRelief,
       allowances = ukp.allowances,
       adjustments = ukp.adjustments)
